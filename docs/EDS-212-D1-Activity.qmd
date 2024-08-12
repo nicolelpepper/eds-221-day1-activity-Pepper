@@ -63,5 +63,7 @@ ggplot(data = stl_lead_prop) +
   theme(text = element_text(family = "Optima-Bold")) +
   geom_point(aes(x=pct_elevated, y= perc_black), color='red',size = 2.5,alpha = .50)
 
+ggsave(here::here( "figs","Lead_Fig_Race_SL.jpg"), height = 6, width = 7)
+
 
 ```
