@@ -1,0 +1,67 @@
+---
+title: "EDS 212 Day 1 Activity"
+author: "Nicole Pepper"
+format: html
+editor: visual
+editor_options: 
+  chunk_output_type: console
+---
+
+Load Libraries
+```{r}
+library(tidyverse)
+library(janitor)
+
+#read in data
+stl_lead <- read_csv(here::here("data", "stl_blood_lead.csv"))
+
+# clean names
+stl_lead <- stl_lead %>% clean_names() 
+
+#explore data
+skimr::skim(stl_lead)
+dim(stl_lead)
+names(stl_lead)
+
+```
+
+Create a new data frame
+```{r}
+stl_lead_prop <- stl_lead %>% 
+  dplyr::mutate(perc_white = white / total_pop*100) %>% #creating prop white
+  dplyr::mutate(perc_black = black / total_pop*100)
+```
+
+Create a scatterplot
+```{r}
+ggplot(data = stl_lead_prop, aes(x = pct_elevated, y = perc_white)) +
+  geom_point(size = 2.5, alpha = .50, color = "orange")+
+  labs(title= "High Blood Lead Level Tests for White Population in St. Louis, Missouri", x = "Elevated %", y = "Count") +
+  theme(text = element_text(family = "Optima-Bold"))
+
+
+```
+
+Create a histogram
+```{r}
+ggplot(data = stl_lead_prop, aes(x = pct_elevated)) + geom_histogram(color = "white", fill = "#9c4c06")+ 
+  labs(title= "High Blood Lead Level Tests in St. Louis, Missouri", x = "Elevated %", y = "Count") +
+  theme(text = element_text(family = "Optima-Bold"))
+
+
+ggsave(here::here( "figs","Lead_Fig_SL.jpg"), height = 6, width = 7)
+
+
+```
+
+
+Create a jitterplot comparing lead levels 
+```{r}
+ggplot(data = stl_lead_prop) +
+  geom_point(aes(x = pct_elevated, y = perc_white),size = 2.5, alpha = .50, color = "orange")+
+  labs(title= "Comparing High Blood Lead Level Tests By Race in St. Louis, Missouri", x = "Elevated %", y = "Count") +
+  theme(text = element_text(family = "Optima-Bold")) +
+  geom_point(aes(x=pct_elevated, y= perc_black), color='red',size = 2.5,alpha = .50)
+
+
+```
